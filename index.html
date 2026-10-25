@@ -49,6 +49,12 @@ input,select,textarea{font:inherit;font-size:17px;color:var(--ink);background:va
 .ok{background:#16a34a;color:#fff;padding:12px;border-radius:10px}
 .hide{display:none!important}.mu{opacity:.7}
 a.ol{color:inherit;opacity:.7;font-size:15px;cursor:pointer}
+.card{background:none;aspect-ratio:auto;overflow:visible;border-radius:0}
+.pic{background:var(--grey);border-radius:calc(var(--w)*.018);aspect-ratio:592/530;overflow:hidden}
+.nm{text-align:center;color:var(--tx);font-size:calc(var(--w)*.044);line-height:1.15;margin-top:calc(var(--w)*.016)}
+.nm small{display:block;color:var(--ac);font-size:calc(var(--w)*.037)}
+.toast{position:fixed;left:50%;bottom:calc(var(--w)*.083 + 34px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(10px);background:#16a34a;color:#fff;padding:9px 20px;border-radius:20px;opacity:0;pointer-events:none;transition:.3s;z-index:30;font-size:18px;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%)}
 </style></head><body><div class="wrap">
 <header><div class="logo">rosies.mart</div><button class="tg" id="tg" aria-label="Dark / light mode"><i></i></button></header>
 
@@ -60,7 +66,7 @@ a.ol{color:inherit;opacity:.7;font-size:15px;cursor:pointer}
 
 <section id="order" class="hide">
  <p><a class="ol" onclick="show('home')">← Back to shop</a></p>
- <div class="box"><b>Your items</b><div id="cart"></div><div class="line"><b>Total</b><b id="total">0</b></div></div>
+ <div class="box"><b>Your cart</b><div id="cart"></div><div class="line"><b>Total</b><b id="total">0</b></div></div>
  <div class="box"><b>Your details</b>
   <label>Name<input id="n" autocomplete="name"></label>
   <label>Phone number<input id="p" type="tel" autocomplete="tel"></label>
@@ -93,7 +99,8 @@ a.ol{color:inherit;opacity:.7;font-size:15px;cursor:pointer}
 </section>
 </div>
 
-<button class="bar" id="bar" onclick="show('order')">Order (0)</button>
+<button class="bar" id="bar" onclick="show('order')">Cart (0)</button>
+<div class="toast" id="toast"></div>
 
 <div class="ov" id="ov" onclick="if(event.target===this)closeSheet()"><div class="sheet" id="sheet"></div></div>
 
@@ -117,7 +124,7 @@ $("q").oninput=e=>{q=e.target.value.toLowerCase();renderProducts()};
 function renderProducts(){
  const f=products.filter(p=>(p.name||"").toLowerCase().includes(q));
  $("empty").classList.toggle("hide",f.length>0);
- $("plist").innerHTML=f.map((p,k)=>`<div class="card" style="--i:${k%2}" onclick="openP('${p.id}')"><img src="${esc(p.image)}" alt="${esc(p.name)}"></div>`).join("");observeCards();
+ $("plist").innerHTML=f.map((p,k)=>`<div class="card" style="--i:${k%2}" onclick="openP('${p.id}')"><div class="pic"><img src="${esc(p.image)}" alt="${esc(p.name)}"></div><div class="nm">${esc(p.name)}<small>${cur}${esc(p.price)}</small></div></div>`).join("");observeCards();
  $("olist").innerHTML=products.map(p=>`<div class="line"><span>${esc(p.name)} — ${cur}${esc(p.price)}</span><button class="btn s" onclick="delp('${p.id}')">Delete</button></div>`).join("")||"<span class='mu'>None yet.</span>";
 }
 function openP(id){const p=products.find(x=>x.id===id);if(!p)return;
@@ -125,16 +132,17 @@ function openP(id){const p=products.find(x=>x.id===id);if(!p)return;
  ${p.colors?.length?`<label>Color<select id="mc">${p.colors.map(c=>`<option>${esc(c)}</option>`).join("")}</select></label>`:""}
  ${p.sizes?.length?`<label>Size<select id="ms">${p.sizes.map(c=>`<option>${esc(c)}</option>`).join("")}</select></label>`:""}
  <label>Quantity<input id="mq" type="number" min="1" value="1"></label>
- <button class="btn" onclick="add('${id}')">Add to order</button>`;
+ <div class="row"><button class="btn" style="background:transparent;border:2px solid var(--ac);color:var(--ac)" onclick="add('${id}',false)">Add to cart</button><button class="btn" onclick="add('${id}',true)">Order now</button></div>`;
  $("ov").classList.add("on")}
 function closeSheet(){$("ov").classList.remove("on")}
-function add(id){const p=products.find(x=>x.id===id);
+function add(id,go){const p=products.find(x=>x.id===id);
  cart.push({name:p.name,price:+p.price,color:$("mc")?.value||"",size:$("ms")?.value||"",qty:Math.max(1,parseInt($("mq").value)||1)});
- closeSheet();renderCart();show("order")}
+ closeSheet();renderCart();if(go)show("order");else toast("Added to cart ✓")}
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("on");clearTimeout(window._tt);window._tt=setTimeout(()=>e.classList.remove("on"),1700)}
 function renderCart(){
  const t=cart.reduce((s,c)=>s+c.price*c.qty,0);
- $("bar").textContent=cart.length?`Order (${cart.length}) · ${cur}${t}`:"Order (0)";
- $("cart").innerHTML=cart.map((c,i)=>`<div class="line"><span>${esc(c.name)} ${[c.color,c.size].filter(Boolean).map(esc).join(" / ")} × ${c.qty}</span><span>${cur}${c.price*c.qty} <button class="btn s" onclick="cart.splice(${i},1);renderCart()">✕</button></span></div>`).join("")||"<span class='mu'>Your order is empty. Pick something from the shop.</span>";
+ $("bar").textContent=cart.length?`View cart (${cart.length}) · ${cur}${t}`:"Cart (0)";
+ $("cart").innerHTML=cart.map((c,i)=>`<div class="line"><span>${esc(c.name)} ${[c.color,c.size].filter(Boolean).map(esc).join(" / ")} × ${c.qty}</span><span>${cur}${c.price*c.qty} <button class="btn s" onclick="cart.splice(${i},1);renderCart()">✕</button></span></div>`).join("")||"<span class='mu'>Your cart is empty. Pick something from the shop.</span>";
  $("total").textContent=cur+t}
 function delp(id){if(db&&confirm("Delete this product?"))db.doc("products/"+id).delete()}
 
