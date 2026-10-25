@@ -1,3 +1,4 @@
+[README.md](https://github.com/user-attachments/files/33923120/README.md)
 # rosies.mart
 
 A mobile-first online order page for a small beauty shop. Customers pick a
@@ -38,6 +39,22 @@ The page has no server. When a customer presses "Place order", it opens a
 `wa.me` link with the order text. The customer must press Send in WhatsApp,
 so an order is not final until that message arrives. If you need orders saved
 automatically or online payments, you will need a backend service.
+
+## Admin login and owner panel (optional, Supabase)
+
+1. Create a free project at supabase.com.
+2. Open `setup.sql`, replace `YOUR_ADMIN_EMAIL` with your email, paste it into
+   Supabase > SQL Editor and run it.
+3. Supabase > Authentication > Users > Add user: enter that same email and a
+   strong password (tick "Auto confirm user"). Then, in Authentication
+   settings, turn off new user sign-ups.
+4. Supabase > Project Settings > API: copy the Project URL and the anon /
+   publishable key into `SUPA={url:"",key:""}` in `index.html`.
+5. Open your site, tap "Admin login", sign in. If the shop is empty, the 6 sample
+   products are imported automatically; edit them or add your own. Orders are saved there and also sent to WhatsApp.
+
+The anon key is safe to publish; the security rules in `setup.sql` let only
+your admin email change data. Never put the `service_role` key in the page.
 
 ## Claude-hosted version
 
