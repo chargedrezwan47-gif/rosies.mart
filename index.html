@@ -55,6 +55,31 @@ a.ol{color:inherit;opacity:.7;font-size:15px;cursor:pointer}
 .nm small{display:block;color:var(--ac);font-size:calc(var(--w)*.037)}
 .toast{position:fixed;left:50%;bottom:calc(var(--w)*.083 + 34px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(10px);background:#16a34a;color:#fff;padding:9px 20px;border-radius:20px;opacity:0;pointer-events:none;transition:.3s;z-index:30;font-size:18px;white-space:nowrap}
 .toast.on{opacity:1;transform:translateX(-50%)}
+.fab{position:fixed;z-index:25;right:max(12px,calc((100vw - var(--w))/2 + var(--w)*.04));bottom:calc(var(--w)*.083 + 34px + env(safe-area-inset-bottom,0px));width:54px;height:54px;border-radius:50%;border:0;background:var(--ac);color:#fff;font-size:26px;box-shadow:0 4px 14px rgba(0,0,0,.4);cursor:pointer;padding:0}
+.bd,.bd2{background:#ef4444;color:#fff;border-radius:10px;font-size:13px;padding:1px 6px;font-family:system-ui,sans-serif}
+.fab .bd{position:absolute;top:-4px;right:-4px}
+.cp{position:fixed;top:0;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,430px);height:100vh;height:100dvh;z-index:40;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.ch{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--panel);border-bottom:1px solid var(--bd)}
+.cb,.ic{background:none;border:0;color:var(--tx);font-size:24px;cursor:pointer;padding:0 4px}
+.ct{flex:1;line-height:1.2;min-width:0}.ct small{display:block;opacity:.65}
+.ch a{color:#25d366;text-decoration:none;font-size:15px}
+.cm{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:6px}
+.dy{align-self:center;font-size:13px;opacity:.7;background:var(--panel);padding:2px 10px;border-radius:10px;margin:6px 0}
+.b{max-width:80%;padding:7px 10px;border-radius:14px;overflow-wrap:anywhere;font-size:17px}
+.b.me{align-self:flex-end;background:var(--ac);color:#fff;border-bottom-right-radius:4px}
+.b.them{align-self:flex-start;background:var(--panel);border:1px solid var(--bd);border-bottom-left-radius:4px}
+.b img{max-width:100%;border-radius:10px;display:block;margin-bottom:4px;cursor:zoom-in}
+.mt{font-size:12px;opacity:.8;text-align:right;margin-top:2px}.tk.sn{color:#7dd3fc}
+.typ{padding:0 14px 4px;font-size:14px;opacity:.75}
+.qr{display:flex;gap:6px;overflow-x:auto;padding:6px 10px}
+.qc{flex:none;border:1px solid var(--ac);background:transparent;color:var(--tx);border-radius:16px;padding:5px 11px;font:inherit;font-size:15px;cursor:pointer}
+.pre{display:flex;gap:6px;padding:6px 10px}.pre input{flex:1;min-width:0;font-size:16px;padding:7px}
+.cf{display:flex;align-items:center;gap:6px;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:var(--panel);border-top:1px solid var(--bd)}
+.cf input{flex:1;min-width:0;font-size:17px;border-radius:20px;padding:10px 14px}
+.cf .sd{width:42px;height:42px;border-radius:50%;padding:0;font-size:18px;flex:none}
+.emo{display:flex;flex-wrap:wrap;gap:4px;padding:6px 10px;background:var(--panel)}.emo button{background:none;border:0;font-size:24px;cursor:pointer}
+.zm{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center}.zm img{max-width:96%;max-height:96%}
+.ib{cursor:pointer}
 </style></head><body><div class="wrap">
 <header><div class="logo">rosies.mart</div><button class="tg" id="tg" aria-label="Dark / light mode"><i></i></button></header>
 
@@ -87,6 +112,7 @@ a.ol{color:inherit;opacity:.7;font-size:15px;cursor:pointer}
   <label>Your WhatsApp number for orders (with country code, e.g. 8801XXXXXXXXX)<input id="sw" type="tel"></label>
   <button class="btn" id="sets">Save settings</button></div>
  <div class="box"><b>Your products</b><div id="olist"></div></div>
+ <div class="box"><b>Customer chats <span id="ibadge" style="color:#f87171"></span></b><div id="inbox" class="mu">No chats yet.</div></div>
  <div class="box"><b>Orders received</b><div id="orders" class="mu">No orders yet.</div></div>
 </section>
 
@@ -100,6 +126,16 @@ a.ol{color:inherit;opacity:.7;font-size:15px;cursor:pointer}
 </div>
 
 <button class="bar" id="bar" onclick="show('order')">Cart (0)</button>
+<button class="fab hide" id="fab" aria-label="Chat">💬<span class="bd hide" id="fbd">0</span></button>
+<div class="cp hide" id="cp">
+ <div class="ch"><button class="cb" id="cback">←</button><div class="ct"><b id="ctitle"></b><small id="csub"></small></div><a id="cwa" class="hide" target="_blank" rel="noopener">WhatsApp</a><button class="ic hide" id="cdel" aria-label="Delete chat">🗑</button></div>
+ <div class="cm" id="cm"></div>
+ <div class="typ hide" id="typ">typing…</div>
+ <div class="qr" id="qr"></div>
+ <div class="pre hide" id="pre"><input id="cn" placeholder="Your name"><input id="cph" type="tel" placeholder="Phone (optional)"></div>
+ <div class="emo hide" id="emo"></div>
+ <div class="cf"><button class="ic" id="cimg" aria-label="Send photo">📷</button><input type="file" id="cfile" accept="image/*" class="hide"><button class="ic" id="cemo" aria-label="Emoji">😊</button><input id="ci" placeholder="Type a message…" autocomplete="off"><button class="btn sd" id="cs" aria-label="Send">➤</button></div>
+</div>
 <div class="toast" id="toast"></div>
 
 <div class="ov" id="ov" onclick="if(event.target===this)closeSheet()"><div class="sheet" id="sheet"></div></div>
@@ -132,7 +168,7 @@ function openP(id){const p=products.find(x=>x.id===id);if(!p)return;
  ${p.colors?.length?`<label>Color<select id="mc">${p.colors.map(c=>`<option>${esc(c)}</option>`).join("")}</select></label>`:""}
  ${p.sizes?.length?`<label>Size<select id="ms">${p.sizes.map(c=>`<option>${esc(c)}</option>`).join("")}</select></label>`:""}
  <label>Quantity<input id="mq" type="number" min="1" value="1"></label>
- <div class="row"><button class="btn" style="background:transparent;border:2px solid var(--ac);color:var(--ac)" onclick="add('${id}',false)">Add to cart</button><button class="btn" onclick="add('${id}',true)">Order now</button></div>`;
+ <div class="row"><button class="btn" style="background:transparent;border:2px solid var(--ac);color:var(--ac)" onclick="add('${id}',false)">Add to cart</button><button class="btn" onclick="add('${id}',true)">Order now</button></div><a class="ol" style="text-align:center" onclick="askAbout('${id}')">💬 Ask about this product</a>`;
  $("ov").classList.add("on")}
 function closeSheet(){$("ov").classList.remove("on")}
 function add(id,go){const p=products.find(x=>x.id===id);
@@ -222,4 +258,86 @@ if(sb){
  sb.auth.getSession().then(r=>{if(r.data&&r.data.session)isAdmin=true});
  loadAll();
 }else $("ownerLink").classList.add("hide");
-</script></body></html>
+</script>
+<script>
+function uuid(){return window.crypto&&crypto.randomUUID?crypto.randomUUID():"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c=="x"?r:r&3|8).toString(16)})}
+const lsGet=k=>{try{return localStorage.getItem(k)||""}catch(e){return""}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+const intl=p=>{p=String(p||"").replace(/\D/g,"");return p?(p.startsWith("880")?p:p.startsWith("0")?"88"+p:p):""};
+const fmtT=d=>new Date(d).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+const dayL=d=>{const x=new Date(d).toDateString();return x===new Date().toDateString()?"Today":x===new Date(Date.now()-864e5).toDateString()?"Yesterday":new Date(d).toLocaleDateString([],{day:"numeric",month:"short",year:"numeric"})};
+const C={mode:"c",id:"",last:0,seen:0,msgs:[],day:"",open:false,inbox:[],prev:0,ty:0,n:0};
+const QR_C=["Is this in stock?","What's the delivery charge?","How can I order?","Payment methods?","Can I get a discount?"];
+const QR_A=["Thank you for your order! 😊","Yes, it's available.","Delivery takes 2–3 days.","Please send your full address.","We'll confirm shortly."];
+const EMO=["😊","😍","👍","🙏","❤️","😂","😘","🥰","✨","💄","💅","👌","🎉","😅","🤩","🔥"];
+function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.setValueAtTime(.15,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.4);o.start();o.stop(a.currentTime+.4)}catch(e){}}
+function zoomImg(s){const z=document.createElement("div");z.className="zm";z.innerHTML='<img src="'+s+'">';z.onclick=()=>z.remove();document.body.appendChild(z)}
+function askAbout(id){const p=products.find(x=>x.id===id),t="Hi! I have a question about: "+(p?p.name:"");
+ if(sb){closeSheet();openChat(t)}else if(wa)window.open("https://wa.me/"+wa.replace(/\D/g,"")+"?text="+encodeURIComponent(t),"_blank");else toast("Chat is not available")}
+function bub(m){const mine=C.mode==="c"?m.sender==="customer":m.sender==="admin",seen=C.mode==="c"?m.id<=C.seen:!!m.read_at;
+ return `<div class="b ${mine?"me":"them"}" data-id="${m.id}">${m.image?`<img src="${m.image}" onclick="zoomImg(this.src)">`:""}${m.body?`<div>${esc(m.body).replace(/\n/g,"<br>")}</div>`:""}<div class="mt">${fmtT(m.created_at)}${mine?` <span class="tk${seen?" sn":""}">${seen?"✓✓":"✓"}</span>`:""}</div></div>`}
+function addMsgs(arr){const box=$("cm"),first=C.msgs.length===0,near=box.scrollHeight-box.scrollTop-box.clientHeight<140;let h="";
+ for(const m of arr){if(C.msgs.some(x=>x.id===m.id))continue;C.msgs.push(m);C.last=Math.max(C.last,m.id);const d=dayL(m.created_at);if(d!==C.day){C.day=d;h+=`<div class="dy">${d}</div>`}h+=bub(m)}
+ if(h){box.insertAdjacentHTML("beforeend",h);if(first||near)box.scrollTop=box.scrollHeight}chips()}
+function ticks(){document.querySelectorAll("#cm .b.me").forEach(el=>{const id=+el.dataset.id,m=C.msgs.find(x=>x.id===id),seen=C.mode==="c"?id<=C.seen:!!(m&&m.read_at),t=el.querySelector(".tk");if(t){t.className="tk"+(seen?" sn":"");t.textContent=seen?"✓✓":"✓"}})}
+function chips(){const q=$("qr");q.innerHTML=(C.mode==="c"?QR_C:QR_A).map(t=>`<button class="qc">${esc(t)}</button>`).join("");q.classList.toggle("hide",C.mode==="c"&&C.msgs.length>0);q.querySelectorAll("button").forEach(b=>b.onclick=()=>{$("ci").value=b.textContent;send()})}
+function resetUI(){C.msgs=[];C.last=0;C.seen=0;C.day="";$("cm").innerHTML="";$("typ").classList.add("hide");$("emo").classList.add("hide");$("ci").value="";$("cp").classList.remove("hide");C.open=true;document.body.style.overflow="hidden";chips()}
+function openChat(pre){C.mode="c";C.id=lsGet("rm-chat")||uuid();lsSet("rm-chat",C.id);resetUI();
+ $("ctitle").textContent="Chat with "+(document.title.replace(/^\(\d+\)\s*/,"")||"us");$("csub").textContent="We usually reply soon";$("cwa").classList.add("hide");$("cdel").classList.add("hide");
+ $("cn").value=lsGet("rm-chat-name");$("cph").value=lsGet("rm-chat-ph");$("pre").classList.toggle("hide",!!lsGet("rm-chat-name"));
+ if(typeof pre==="string")$("ci").value=pre;setBadge(0);C.prev=0;if(lsGet("rm-chat-has"))pollC()}
+async function openAdmin(id){C.mode="a";C.id=id;resetUI();const cv=C.inbox.find(x=>x.id===id)||{},w=intl(cv.phone);
+ $("ctitle").textContent=cv.customer_name||"Customer "+id.slice(0,4);$("csub").textContent=cv.phone||"No phone given";
+ $("cwa").classList.toggle("hide",!w);if(w)$("cwa").href="https://wa.me/"+w;$("cdel").classList.remove("hide");$("pre").classList.add("hide");await pollA()}
+function closeChat(){const was=C.mode;C.open=false;$("cp").classList.add("hide");document.body.style.overflow="";if(was==="a")loadInbox()}
+function setBadge(u){const b=$("fbd");b.textContent=u;b.classList.toggle("hide",!u)}
+async function pollC(){const first=C.last===0;
+ const [g,s]=await Promise.all([sb.rpc("chat_get",{p_token:C.id,p_after:C.last,p_mark:true}),sb.rpc("chat_status",{p_token:C.id})]);
+ if(g.data&&g.data.length){const had=g.data.some(m=>m.sender==="admin");addMsgs(g.data);if(!first&&had)beep()}
+ if(s.data){C.seen=s.data.seen_upto||0;ticks();$("typ").classList.toggle("hide",!s.data.typing)}}
+async function statC(){if(!lsGet("rm-chat-has"))return;const s=await sb.rpc("chat_status",{p_token:lsGet("rm-chat")}),u=s.data?+s.data.unread||0:0;setBadge(u);if(u>C.prev){beep();toast("New reply from the shop 💬")}C.prev=u}
+async function pollA(){
+ const [m,r,cv]=await Promise.all([sb.from("chat_messages").select("*").eq("conversation_id",C.id).gt("id",C.last).order("id"),
+  sb.from("chat_messages").select("id,read_at").eq("conversation_id",C.id).eq("sender","admin").not("read_at","is",null),
+  sb.from("chat_conversations").select("customer_typing_at").eq("id",C.id).maybeSingle()]);
+ if(m.data&&m.data.length){const first=C.last===0,had=m.data.some(x=>x.sender==="customer");addMsgs(m.data);if(!first&&had)beep();
+  await sb.from("chat_messages").update({read_at:new Date().toISOString()}).eq("conversation_id",C.id).eq("sender","customer").is("read_at",null)}
+ if(r.data){r.data.forEach(x=>{const mm=C.msgs.find(y=>y.id===x.id);if(mm)mm.read_at=x.read_at});ticks()}
+ const t=cv.data&&cv.data.customer_typing_at;$("typ").classList.toggle("hide",!(t&&Date.now()-new Date(t)<4500))}
+async function loadInbox(){
+ const [c,u]=await Promise.all([sb.from("chat_conversations").select("id,customer_name,phone,last_body,last_at").order("last_at",{ascending:false}),sb.from("chat_messages").select("conversation_id").eq("sender","customer").is("read_at",null)]);
+ if(c.error||u.error)return;const cnt={};(u.data||[]).forEach(x=>cnt[x.conversation_id]=(cnt[x.conversation_id]||0)+1);const total=(u.data||[]).length;C.inbox=c.data||[];
+ $("inbox").innerHTML=C.inbox.length?C.inbox.map(x=>`<div class="line ib" onclick="openAdmin('${x.id}')"><span><b>${esc(x.customer_name||"Customer "+x.id.slice(0,4))}</b><br><span class="mu">${esc((x.last_body||"").slice(0,60))}</span></span><span style="text-align:right">${cnt[x.id]?`<span class="bd2">${cnt[x.id]}</span><br>`:""}<span class="mu" style="font-size:13px">${fmtT(x.last_at)}</span></span></div>`).join(""):"No chats yet.";
+ $("ibadge").textContent=total?`(${total} new)`:"";
+ if(total>C.prev){beep();toast("New customer message 💬")}C.prev=total;
+ document.title=(total?`(${total}) `:"")+document.title.replace(/^\(\d+\)\s*/,"")}
+async function send(img){const inp=$("ci"),body=inp.value.trim();if(!body&&!img)return;
+ if(C.mode==="c"){const nm=$("cn").value.trim(),ph=$("cph").value.trim();
+  if(!lsGet("rm-chat-name")&&!nm){toast("Please enter your name");$("cn").focus();return}
+  if(nm){lsSet("rm-chat-name",nm);lsSet("rm-chat-ph",ph)}
+  inp.value="";const r=await sb.rpc("chat_send",{p_token:C.id,p_name:lsGet("rm-chat-name"),p_phone:lsGet("rm-chat-ph"),p_body:body||null,p_image:img||null});
+  if(r.error){inp.value=body;toast("Could not send. Please try again.");return}
+  lsSet("rm-chat-has","1");$("pre").classList.add("hide");await pollC()}
+ else{inp.value="";const r=await sb.from("chat_messages").insert({conversation_id:C.id,sender:"admin",body:body||null,image:img||null});
+  if(r.error){inp.value=body;toast("Could not send: "+r.error.message);return}
+  await sb.from("chat_conversations").update({last_body:body||"📷 Photo",last_at:new Date().toISOString(),admin_typing_at:null}).eq("id",C.id);await pollA()}}
+function shrink(f){return new Promise((ok,no)=>{const r=new FileReader();r.onerror=no;r.onload=()=>{const i=new Image();i.onerror=no;i.onload=()=>{const k=Math.min(1,900/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext("2d").drawImage(i,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",.72))};i.src=r.result};r.readAsDataURL(f)})}
+async function master(){if(document.hidden)return;C.n++;
+ try{if(C.open){C.mode==="c"?await pollC():await pollA()}else if(isAdmin){if(C.n%2===0)await loadInbox()}else if(C.n%3===0)await statC()}catch(e){}}
+if(sb){
+ $("fab").classList.remove("hide");
+ $("fab").onclick=()=>{if(isAdmin){show("owner");loadInbox()}else openChat()};
+ $("cback").onclick=closeChat;$("cs").onclick=()=>send();
+ $("ci").onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send()}};
+ $("ci").oninput=()=>{const now=Date.now();if(now-C.ty<2500)return;C.ty=now;if(C.mode==="c"){if(lsGet("rm-chat-has"))sb.rpc("chat_typing",{p_token:C.id})}else sb.from("chat_conversations").update({admin_typing_at:new Date().toISOString()}).eq("id",C.id)};
+ $("cimg").onclick=()=>$("cfile").click();
+ $("cfile").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;try{send(await shrink(f))}catch(err){toast("Could not read that image")}};
+ $("emo").innerHTML=EMO.map(e=>`<button>${e}</button>`).join("");
+ $("emo").onclick=e=>{if(e.target.tagName==="BUTTON"){$("ci").value+=e.target.textContent;$("ci").focus()}};
+ $("cemo").onclick=()=>$("emo").classList.toggle("hide");
+ $("cdel").onclick=async()=>{if(!confirm("Delete this whole chat?"))return;await sb.from("chat_conversations").delete().eq("id",C.id);closeChat();loadInbox()};
+ if(lsGet("rm-chat-has"))statC();
+ setInterval(master,3500);
+}
+</script>
+</body></html>
