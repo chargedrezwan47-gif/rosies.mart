@@ -1,4 +1,4 @@
-[README.md](https://github.com/user-attachments/files/33923363/README.md)
+[README.md](https://github.com/user-attachments/files/33923591/README.md)
 # rosies.mart
 
 A mobile-first online order page for a small beauty shop. Customers pick a
@@ -13,6 +13,7 @@ Single file, no build step, no dependencies.
 - Dark / light toggle, live product search
 - Product names and prices shown under each picture
 - Product popup with color, size and quantity, with "Add to cart" (keep shopping) and "Order now"
+- Live customer chat with an owner inbox (see below)
 - Cart bar at the bottom showing item count and total
 - Order tab with name, phone and address
 - One-tap "Send order on WhatsApp" with the full order pre-written
@@ -57,6 +58,25 @@ automatically or online payments, you will need a backend service.
 
 The anon key is safe to publish; the security rules in `setup.sql` let only
 your admin email change data. Never put the `service_role` key in the page.
+
+## Customer chat (optional, needs the Supabase setup above)
+
+1. Supabase > SQL Editor: paste and run `chat_setup.sql` (after `setup.sql`).
+2. Upload the new `index.html`. A 💬 button appears for customers.
+
+Customers: ask a question from any product ("Ask about this product") or the 💬
+button; quick-reply chips, photos, emoji, typing indicator, sent/seen ticks,
+unread badge and a sound when the shop replies. Their chat stays on their device.
+
+Owner: after Admin login, "Customer chats" lists every conversation with unread
+counts. Open one to reply with text, photos, emoji and saved quick replies, see
+when the customer is typing and has read your message, jump to their WhatsApp,
+or delete the chat. A sound plays when a new message arrives while the page is
+open.
+
+Notes: messages update every few seconds (polling), not instantly. There are no
+push notifications when the page is closed. Photos are shrunk and stored in the
+database. Clearing browser data on a phone starts a new conversation.
 
 ## Claude-hosted version
 
