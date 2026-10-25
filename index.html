@@ -204,7 +204,7 @@ async function loadOrders(){const r=await sb.from("orders").select("*").order("c
 async function signOut(){await sb.auth.signOut();isAdmin=false;show("home")}
 if(sb){
  db={doc:()=>({set:async o=>{const r=await sb.from("orders").insert({name:o.name,phone:o.phone,address:o.address,items:o.items,total:o.total});if(r.error)throw r.error}})};
- $("loginBtn").onclick=async()=>{const m=$("lmsg");m.textContent="Signing in…";const r=await sb.auth.signInWithPassword({email:$("le").value.trim(),password:$("lp").value});if(r.error){m.textContent="Login failed: "+r.error.message;return}$("lp").value="";m.textContent="";isAdmin=true;show("owner");loadOrders()};
+ $("loginBtn").onclick=async()=>{const m=$("lmsg");m.textContent="Signing in…";const r=await sb.auth.signInWithPassword({email:$("le").value.trim(),password:$("lp").value});if(r.error){m.textContent="Login failed: "+r.error.message;return}$("lp").value="";m.textContent="";isAdmin=true;show("owner");loadOrders();if(!products.length)await importSeed()};
  $("addp").onclick=async()=>{const m=$("pmsg");if(!$("pn").value||!$("pp").value){m.textContent="Add a name and price.";return}
   try{m.textContent="Saving…";let url="";const f=$("pi").files[0];
    if(f){const path=Date.now()+"-"+f.name.replace(/[^\w.]/g,"_");const u=await sb.storage.from("product-images").upload(path,f);if(u.error)throw u.error;url=sb.storage.from("product-images").getPublicUrl(path).data.publicUrl}
