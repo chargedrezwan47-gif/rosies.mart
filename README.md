@@ -1,4 +1,4 @@
-[README.md](https://github.com/user-attachments/files/33923120/README.md)
+[README.md](https://github.com/user-attachments/files/33923363/README.md)
 # rosies.mart
 
 A mobile-first online order page for a small beauty shop. Customers pick a
@@ -11,7 +11,9 @@ Single file, no build step, no dependencies.
 
 - Mobile-only layout (a fixed phone-width column)
 - Dark / light toggle, live product search
-- Product popup with color, size and quantity
+- Product names and prices shown under each picture
+- Product popup with color, size and quantity, with "Add to cart" (keep shopping) and "Order now"
+- Cart bar at the bottom showing item count and total
 - Order tab with name, phone and address
 - One-tap "Send order on WhatsApp" with the full order pre-written
 - Scroll animations, breathing-glow logo (respects "reduce motion")
